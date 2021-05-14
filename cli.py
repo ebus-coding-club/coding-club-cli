@@ -21,7 +21,7 @@ Feel free to import any standard packages.
 '''
 
 # IMPORTS
-import time
+import time, os, random
 
 # COMMANDS
 class commands:
@@ -56,6 +56,10 @@ class commands:
         """Type something else."""
         print(commands.command.__doc__) # Print the docstring of this function
 
+    def welcome(*args):
+        """Welcome to the future!"""
+        print(commands.welcome.__doc__)
+
     @staticmethod
     def helloworld(*args):
         """Hello World!"""
@@ -85,9 +89,8 @@ class commands:
     def browser(*args):
         """browser [url]\nOpen a browser window and navigate to a url."""
         import webbrowser
-        from os import path
         chromePath = 'C:/Program Files/Google/Chrome/Application/chrome.exe' 
-        if not path.exists(chromePath):
+        if not os.path.exists(chromePath):
             chromePath = 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe'
 
         webbrowser.get(chromePath + ' %s').open_new_tab(''.join(args))
@@ -105,7 +108,6 @@ class commands:
     @staticmethod
     def rickroll(*args):
         """Try me."""
-        import random
         print(random.choice(["Big mistake.", "Too late.", "Ladies and gentlemen, we gottem."]))
         time.sleep(1)
         commands.browser('https://www.youtube.com/watch?v=dQw4w9WgXcQ')
@@ -138,7 +140,6 @@ class commands:
     @staticmethod
     def rainbow(*args):
         """Cycle through terminal colors."""
-        import os
         for color in '0123456789abcdef0':
             os.system(f'color {color}7')
             time.sleep(0.1)
@@ -146,7 +147,6 @@ class commands:
     @staticmethod
     def paradox(*args):
         """Break the laws of the universe."""
-        import random
         paradoxes = [
             "True or False?\n'This statement is false.'",
             "Does a set of all sets contain itself?",
