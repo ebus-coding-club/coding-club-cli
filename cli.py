@@ -52,6 +52,16 @@ class commands:
         print(args)
 
     @staticmethod
+    def debug(*args):
+        """debug [on/off]\nTurn debug mode on or off."""
+        global debug
+        if len(args) > 0 and (args[0] == 'on' or args[0] == 'off'):
+            debug = True if args[0] == 'on' else False
+
+        else:
+            print(commands.debug.__doc__)
+
+    @staticmethod
     def command(*args):
         """Type something else."""
         print(commands.command.__doc__) # Print the docstring of this function
@@ -169,8 +179,45 @@ class commands:
     def quote(*args):
         """I don't like sand."""
         pass # Work in progress
+    
+    @staticmethod
+    def birthday(*args):
+        """birthday [yyyy/mm/dd]\nShow birthday info."""
+        from datetime import date
+        if len(args) < 1:
+            print(commands.birthday.__doc__)
+            return
 
+        now = date.today()
+        print(f"Today: {now.strftime('%A %d, %b %Y')}")
+        try:
+            dob = date(*[int(i) for i in args[0].split("/")])
+            
+        except:
+            print("Invalid date.")
+            return
+
+        numberOfDays = (now - dob).days
+        print(f"You are {numberOfDays // 365} years old.")
+        print(f"You were born on a {dob.strftime('%A')}.")
+        print(f"You have spent {numberOfDays} days on Earth.")
+        nextBirthday = date(now.year, dob.month, dob.day)
+        if nextBirthday < now:
+            nextBirthday = date(now.year + 1, dob.month, dob.day)
+            
+        elif nextBirthday == now:
+            print("Today is your birthday! Happy Birthday!")
+            return
+            
+        print(f"Your birthday is in {(nextBirthday - now).days} days.")
+        
 # INPUT LOOP
 while True:
     command = input("> ").split() # Get input from the user and split it into words
-    if command != []: getattr(commands, command[0], commands.default)(*command[1:]) # Call a function from the commands class that matches the first word, with the rest of the words as arguments
+    try:
+        if command != []: getattr(commands, command[0], commands.default)(*command[1:])
+        # Call a function from the commands class that matches the first word, with the rest of the words as arguments
+
+    except Exception as exception:
+        if debug:
+            print(str(exception))
