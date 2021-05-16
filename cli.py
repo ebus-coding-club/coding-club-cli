@@ -23,6 +23,10 @@ Feel free to import any standard packages.
 # IMPORTS
 import time, os, random
 
+# GLOBAL VARIABLES
+prefix = "> "
+debug = False
+
 # COMMANDS
 class commands:
     @staticmethod
@@ -57,9 +61,20 @@ class commands:
         global debug
         if len(args) > 0 and (args[0] == 'on' or args[0] == 'off'):
             debug = True if args[0] == 'on' else False
+            print(f"Debug mode {args[0]}.")
 
         else:
             print(commands.debug.__doc__)
+
+    @staticmethod
+    def prefix(*args):
+        """prefix [string]\nSet the input prefix."""
+        global prefix
+        if len(args) > 0:
+            prefix = ' '.join(args) + ' '
+
+        else:
+            print(commands.prefix.__doc__)
 
     @staticmethod
     def command(*args):
@@ -133,9 +148,9 @@ class commands:
         from requests import get
         from re import search, IGNORECASE
         response = get('https://en.wikipedia.org/wiki/Starlink').text
-        orbiting = search(r'Total satellites currently in orbit \(.*\): (\d+)', response, IGNORECASE)
-        launched = search(r'Total satellites launched \(.*\): (\d+)', response, IGNORECASE)
-        deorbited = search(r'Total satellites deorbited \(.*\): (\d+)', response, IGNORECASE)
+        orbiting = search(r'Total satellites currently in orbit .*: (\d+)', response, IGNORECASE)
+        launched = search(r'Total satellites launched .*: (\d+)', response, IGNORECASE)
+        deorbited = search(r'Total satellites deorbited .*: (\d+)', response, IGNORECASE)
         print(orbiting.group(0))
         print(launched.group(0))
         print(deorbited.group(0))
@@ -143,7 +158,7 @@ class commands:
     @staticmethod
     def yoda(*args):
         """Say something, I will."""
-        print("There is another...")
+        commands.quote('yoda')
         time.sleep(1)
         commands.browser('https://www.google.com/search?q=yoda&tbm=isch')
 
@@ -178,18 +193,49 @@ class commands:
     @staticmethod
     def quote(*args):
         """I don't like sand."""
-        pass # Work in progress
+        yoda = [
+            '"There is another..." - Yoda',
+            '"Do or do not. There is no try." - Yoda',
+            '"Patience you must have my young Padawan." - Yoda',
+            '"Powerful you have become, the dark side I sense in you." - Yoda',
+            '"Feel the force!" - Yoda',
+            '"Size matters not." - Yoda',
+            '"The dark side clouds everything. Impossible to see the light, the future is." - Yoda',
+            '"You will find only what you bring with you." - Yoda',
+            '"When you look at the dark side, careful you must be. For the dark side looks back." - Yoda',
+            '"Your path you must decide." - Yoda',
+            '"If no mistake you have made, losing you are. A different game you should play." - Yoda'
+        ]
+        starwars = [
+            *yoda,
+            '"It\'s a trap!" - Admiral Ackbar',
+            '"Never tell me the odds." - Han Solo',
+            '"I find your lack of faith disturbing." - Darth Vader',
+            '"It\'s not my fault." - Han Solo',
+            '"No. I am your father." - Darth Vader',
+            '"There\'s always a bigger fish." - Qui-Gon Jinn',
+            '"Unlimited power!" - Darth Sidious',
+            '"A long time ago in a galaxy far, far away..." - Star Wars',
+            '"I don\'t like sand." - Anakin Skywalker'
+        ]
+        groups = {
+            'yoda': yoda,
+            'starwars': starwars,
+        }
+        if len(args) > 0 and args[0] in groups:
+            print(random.choice(groups[args[0]]))
+
+        else:
+            print(random.choice(random.choice(list(groups.values()))))
     
     @staticmethod
     def birthday(*args):
-        """birthday [yyyy/mm/dd]\nShow birthday info."""
+        """birthday [yyyy/mm/dd]\nShow birthday and age info."""
         from datetime import date
         if len(args) < 1:
             print(commands.birthday.__doc__)
             return
 
-        now = date.today()
-        print(f"Today: {now.strftime('%A %d, %b %Y')}")
         try:
             dob = date(*[int(i) for i in args[0].split("/")])
             
@@ -197,6 +243,12 @@ class commands:
             print("Invalid date.")
             return
 
+        now = date.today()
+        if dob > now:
+            print(random.choice(["That's not how it works.", "Are you from the future?", "Nice try."]))
+            return
+
+        print(f"Today is {now.strftime('%A %b %d, %Y')}")
         numberOfDays = (now - dob).days
         print(f"You are {numberOfDays // 365} years old.")
         print(f"You were born on a {dob.strftime('%A')}.")
@@ -206,14 +258,14 @@ class commands:
             nextBirthday = date(now.year + 1, dob.month, dob.day)
             
         elif nextBirthday == now:
-            print("Today is your birthday! Happy Birthday!")
+            print("Today is your birthday! Happy birthday!")
             return
             
         print(f"Your birthday is in {(nextBirthday - now).days} days.")
-        
+
 # INPUT LOOP
 while True:
-    command = input("> ").split() # Get input from the user and split it into words
+    command = input(prefix).split() # Get input from the user and split it into words
     try:
         if command != []: getattr(commands, command[0], commands.default)(*command[1:])
         # Call a function from the commands class that matches the first word, with the rest of the words as arguments
