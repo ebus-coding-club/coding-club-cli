@@ -21,7 +21,7 @@ Feel free to import any standard packages.
 '''
 
 # IMPORTS
-import time, os, random
+import time, os, random, shlex
 
 # GLOBAL VARIABLES
 prefix = "> "
@@ -37,7 +37,7 @@ class commands:
     @staticmethod
     def help(*args):
         """help [command]\nDisplay available commands or show help about a specific command."""
-        if len(args) != 0 and args[0] in dir(commands):
+        if args and args[0] in dir(commands):
             print(getattr(commands, args[0]).__doc__) # Print the docstring of a command
         else:
             print("Available commands:")
@@ -59,7 +59,7 @@ class commands:
     def debug(*args):
         """debug [on/off]\nTurn debug mode on or off."""
         global debug
-        if len(args) > 0 and (args[0] == 'on' or args[0] == 'off'):
+        if args and (args[0] == 'on' or args[0] == 'off'):
             debug = True if args[0] == 'on' else False
             print(f"Debug mode {args[0]}.")
 
@@ -70,8 +70,8 @@ class commands:
     def prefix(*args):
         """prefix [string]\nSet the input prefix."""
         global prefix
-        if len(args) > 0:
-            prefix = ' '.join(args) + ' '
+        if args:
+            prefix = args[0]
 
         else:
             print(commands.prefix.__doc__)
@@ -218,11 +218,17 @@ class commands:
             '"A long time ago in a galaxy far, far away..." - Star Wars',
             '"I don\'t like sand." - Anakin Skywalker'
         ]
+        other = [
+            *yoda,
+            *starwars,
+            '"There are only 10 types of people in the world: Those that understand binary and those that don\'t." -The Talos Principle'
+        ]
         groups = {
             'yoda': yoda,
             'starwars': starwars,
+            'other' : other,
         }
-        if len(args) > 0 and args[0] in groups:
+        if args and args[0] in groups:
             print(random.choice(groups[args[0]]))
 
         else:
@@ -231,11 +237,11 @@ class commands:
     @staticmethod
     def birthday(*args):
         """birthday [yyyy/mm/dd]\nShow birthday and age info."""
-        from datetime import date
-        if len(args) < 1:
+        if not args:
             print(commands.birthday.__doc__)
             return
 
+        from datetime import date
         try:
             dob = date(*[int(i) for i in args[0].split("/")])
             
@@ -263,12 +269,41 @@ class commands:
             
         print(f"Your birthday is in {(nextBirthday - now).days} days.")
 
+    @staticmethod
+    def joke(*args):
+        """Funny jokes."""
+        import random
+        jokes = [
+            "Why did the bike fall over? \nIt was two-tired.",
+            "What did the ocean say to the shore? \nNothing. It just waved.",
+            "Why did the gym close down? \nIt just didn't work out.",
+            "What do you call a pig that does Karate? \nA pork chop.",
+            "What's the best thing about Switzerland? \nI don't know, but the flag is a big plus.",
+            "What kind of tree can fit in your hand? \nA palm tree!",
+            "Today at the bank, a woman asked me to check her balance. So I pushed her over.",
+            "What did the traffic light say to the car? \n'Don't look! I'm about to change.'",
+            "What ryhmes with orange? \nNo, it doesn't.",
+            "What did the plate say to his friend? \nTonight, dinner's on me!",
+            "How do trees get online? \nThey just log on!",
+            "My daughter wanted a Cinderella-themed party, so I invited her friends and made them clean the house.",
+            "'Can I watch the TV?' \nDad: Yes, but don't turn it on.",
+            "Are you free tonight? \nNo, I'm expensive.",
+            "Why did the kid throw his clock out of the window? \nBecause he wanted to see time fly.",
+            "What do you call a snake that is exactly 3.14 meters long? \nA πthon.",
+            "What did the Science book say to the Math book? \nWow, you've got problems.",
+            "What happened when the strawberry attempted to cross the road? \nThere was a traffic jam!",
+            "Your WinRAR 30-day trial is up. Please pay to continue using service.",
+            "Parallel lines have so much in common. It's a shame they'll never meet."
+        ]
+        print(random.choice(jokes))
+
 # INPUT LOOP
 while True:
-    command = input(prefix).split() # Get input from the user and split it into words
     try:
-        if command != []: getattr(commands, command[0], commands.default)(*command[1:])
+        # Get input from the user and split it into words
+        command = shlex.split(input(prefix))
         # Call a function from the commands class that matches the first word, with the rest of the words as arguments
+        if command: getattr(commands, command[0], commands.default)(*command[1:])
 
     except Exception as exception:
         if debug:
