@@ -21,7 +21,7 @@ Feel free to import any standard packages.
 '''
 
 # IMPORTS
-import time, os, shlex, random
+import time, os, random, shlex
 
 # GLOBAL VARIABLES
 prefix = "> "
@@ -218,9 +218,15 @@ class commands:
             '"A long time ago in a galaxy far, far away..." - Star Wars',
             '"I don\'t like sand." - Anakin Skywalker'
         ]
+        other = [
+            *yoda,
+            *starwars,
+            '"There are only 10 types of people in the world: Those that understand binary and those that don\'t." -The Talos Principle'
+        ]
         groups = {
             'yoda': yoda,
             'starwars': starwars,
+            'other' : other,
         }
         if args and args[0] in groups:
             print(random.choice(groups[args[0]]))
@@ -262,6 +268,34 @@ class commands:
             return
             
         print(f"Your birthday is in {(nextBirthday - now).days} days.")
+
+    @staticmethod
+    def joke(*args):
+        """Funny jokes."""
+        import random
+        jokes = [
+            "Why did the bike fall over? \nIt was two-tired.",
+            "What did the ocean say to the shore? \nNothing. It just waved.",
+            "Why did the gym close down? \nIt just didn't work out.",
+            "What do you call a pig that does Karate? \nA pork chop.",
+            "What's the best thing about Switzerland? \nI don't know, but the flag is a big plus.",
+            "What kind of tree can fit in your hand? \nA palm tree!",
+            "Today at the bank, a woman asked me to check her balance. So I pushed her over.",
+            "What did the traffic light say to the car? \n'Don't look! I'm about to change.'",
+            "What ryhmes with orange? \nNo, it doesn't.",
+            "What did the plate say to his friend? \nTonight, dinner's on me!",
+            "How do trees get online? \nThey just log on!",
+            "My daughter wanted a Cinderella-themed party, so I invited her friends and made them clean the house.",
+            "'Can I watch the TV?' \nDad: Yes, but don't turn it on.",
+            "Are you free tonight? \nNo, I'm expensive.",
+            "Why did the kid throw his clock out of the window? \nBecause he wanted to see time fly.",
+            "What do you call a snake that is exactly 3.14 meters long? \nA πthon.",
+            "What did the Science book say to the Math book? \nWow, you've got problems.",
+            "What happened when the strawberry attempted to cross the road? \nThere was a traffic jam!",
+            "Your WinRAR 30-day trial is up. Please pay to continue using service.",
+            "Parallel lines have so much in common. It's a shame they'll never meet."
+        ]
+        print(random.choice(jokes))
 
 # INPUT LOOP
 while True:
