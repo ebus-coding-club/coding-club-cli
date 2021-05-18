@@ -21,7 +21,7 @@ Feel free to import any standard packages.
 '''
 
 # IMPORTS
-import time, os, random
+import time, os, shlex, random
 
 # GLOBAL VARIABLES
 prefix = "> "
@@ -37,7 +37,7 @@ class commands:
     @staticmethod
     def help(*args):
         """help [command]\nDisplay available commands or show help about a specific command."""
-        if len(args) != 0 and args[0] in dir(commands):
+        if args and args[0] in dir(commands):
             print(getattr(commands, args[0]).__doc__) # Print the docstring of a command
         else:
             print("Available commands:")
@@ -59,7 +59,7 @@ class commands:
     def debug(*args):
         """debug [on/off]\nTurn debug mode on or off."""
         global debug
-        if len(args) > 0 and (args[0] == 'on' or args[0] == 'off'):
+        if args and (args[0] == 'on' or args[0] == 'off'):
             debug = True if args[0] == 'on' else False
             print(f"Debug mode {args[0]}.")
 
@@ -70,8 +70,8 @@ class commands:
     def prefix(*args):
         """prefix [string]\nSet the input prefix."""
         global prefix
-        if len(args) > 0:
-            prefix = ' '.join(args) + ' '
+        if args:
+            prefix = args[0]
 
         else:
             print(commands.prefix.__doc__)
@@ -222,7 +222,7 @@ class commands:
             'yoda': yoda,
             'starwars': starwars,
         }
-        if len(args) > 0 and args[0] in groups:
+        if args and args[0] in groups:
             print(random.choice(groups[args[0]]))
 
         else:
@@ -231,11 +231,11 @@ class commands:
     @staticmethod
     def birthday(*args):
         """birthday [yyyy/mm/dd]\nShow birthday and age info."""
-        from datetime import date
-        if len(args) < 1:
+        if not args:
             print(commands.birthday.__doc__)
             return
 
+        from datetime import date
         try:
             dob = date(*[int(i) for i in args[0].split("/")])
             
@@ -265,10 +265,11 @@ class commands:
 
 # INPUT LOOP
 while True:
-    command = input(prefix).split() # Get input from the user and split it into words
     try:
-        if command != []: getattr(commands, command[0], commands.default)(*command[1:])
+        # Get input from the user and split it into words
+        command = shlex.split(input(prefix))
         # Call a function from the commands class that matches the first word, with the rest of the words as arguments
+        if command: getattr(commands, command[0], commands.default)(*command[1:])
 
     except Exception as exception:
         if debug:
