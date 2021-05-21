@@ -144,7 +144,7 @@ class commands:
     @staticmethod
     def crash(*args):
         """Don't try this at home. (Seriously, don't do it)"""
-        os.system('shutdown /t 5 /c "Your fault."')
+        os.system('shutdown /s /t 5 /c "Your fault."')
 
     @staticmethod
     def bug(*args):
