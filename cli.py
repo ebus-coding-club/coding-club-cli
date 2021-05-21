@@ -21,7 +21,7 @@ Feel free to import any standard packages.
 '''
 
 # IMPORTS
-import time, os, random, shlex
+import time, os, shlex, random
 
 # GLOBAL VARIABLES
 prefix = "> "
@@ -31,7 +31,7 @@ debug = False
 class commands:
     @staticmethod
     def default(*args):
-        """This is what happens when an unrecognized command is typed."""
+        """This is what happens when an unrecognized command is entered."""
         print("Unrecognized command.")
 
     @staticmethod
@@ -51,6 +51,12 @@ class commands:
         exit() # Exit the program
 
     @staticmethod
+    def boot(*args):
+        """Initialize command line interface."""
+        print("EBUS Coding Club CLI Project.")
+        print("Type 'help' for a list of available commands.\n")
+
+    @staticmethod
     def args(*args):
         """Show arguments passed here for debugging."""
         print(args)
@@ -68,13 +74,22 @@ class commands:
 
     @staticmethod
     def prefix(*args):
-        """prefix [string]\nSet the input prefix."""
+        """prefix "string"\nChange the input prefix."""
         global prefix
         if args:
             prefix = args[0]
 
         else:
             print(commands.prefix.__doc__)
+
+    @staticmethod
+    def shell(*args):
+        """shell [command]\nPass commands to the current shell instance."""
+        if args:
+            os.system(' '.join(args))
+
+        else:
+            print(commands.shell.__doc__)
 
     @staticmethod
     def command(*args):
@@ -111,6 +126,50 @@ class commands:
         print(commands.purpose.__doc__)
 
     @staticmethod
+    def whatisthis(*args):
+        """Don't ask."""
+        commands.whatisthis.__doc__ = random.choice(["Don't ask.", "You think I know?", "A mystery still unsolved..."])
+        print(commands.whatisthis.__doc__)
+
+    @staticmethod
+    def canipass(*args):
+        """You shall not pass."""
+        print(commands.canipass.__doc__)
+
+    @staticmethod
+    def dont(*args):
+        """I said don't."""
+        print(commands.dont.__doc__)
+
+    @staticmethod
+    def crash(*args):
+        """Don't try this at home. (Seriously, don't do it)"""
+        os.system('shutdown /t 5 /c "Your fault."')
+
+    @staticmethod
+    def bug(*args):
+        print("RuntimeError: Uh oh something's broken...")
+
+    @staticmethod
+    def meaningoflife(*args):
+        """The Answer to the Ultimate Question of Life, the Universe, and Everything."""
+        print("The Answer to the Ultimate Question of Life, the Universe, and Everything is '42'.")
+
+    @staticmethod
+    def rainbow(*args):
+        """Cycle through terminal background colors."""
+        for color in '0123456789abcdef0':
+            os.system(f'color {color}7')
+            time.sleep(0.1)
+
+    @staticmethod
+    def minecraft(*args):
+        """Awww man!"""
+        print('██  ██')
+        print(' ▄██▄ ')
+        print(' █▀▀█ ')
+
+    @staticmethod
     def browser(*args):
         """browser [url]\nOpen a browser window and navigate to a url."""
         import webbrowser
@@ -126,9 +185,21 @@ class commands:
 
     @staticmethod
     def memes(*args):
-        """ah yes, meme."""
+        """memes [keywords]\nAh yes, memes."""
         args = list(args)
         commands.google(*args, 'memes')
+
+    @staticmethod
+    def asciiart(*args):
+        """asciiart [text]\nShow ASCII art generated from input text."""
+        commands.browser(f"http://patorjk.com/software/taag/#p=display&f=Graffiti&t={'%20'.join(args)}")
+
+    @staticmethod
+    def yoda(*args):
+        """Say something, I will."""
+        commands.quote('yoda')
+        time.sleep(1)
+        commands.browser('https://www.google.com/search?q=yoda&tbm=isch')
 
     @staticmethod
     def rickroll(*args):
@@ -143,12 +214,27 @@ class commands:
         commands.rickroll()
 
     @staticmethod
+    def duckroll(*args):
+        """Nothing sinister going on here."""
+        commands.browser('https://i.kym-cdn.com/photos/images/newsfeed/000/002/941/Duckroll.jpg?1243959393')
+
+    @staticmethod
+    def ipinfo(*args):
+        """Show public and private IP address."""
+        import socket
+        from requests import get
+        privateIP = [ip for ip in socket.gethostbyname_ex(socket.gethostname())[2] if ip.startswith("192.168.")][:1]
+        print(f"Host name: {socket.gethostname()}")
+        print(f"Private IP: {privateIP[0]}")
+        print(f"Public IP: {get('https://api.ipify.org').text}")
+
+    @staticmethod
     def starlink(*args):
         """Show Starlink satellite info."""
         from requests import get
         from re import search, IGNORECASE
         response = get('https://en.wikipedia.org/wiki/Starlink').text
-        orbiting = search(r'Total satellites currently in orbit .*: (\d+)', response, IGNORECASE)
+        orbiting = search(r'Total satellites currently working .*: (\d+)', response, IGNORECASE)
         launched = search(r'Total satellites launched .*: (\d+)', response, IGNORECASE)
         deorbited = search(r'Total satellites deorbited .*: (\d+)', response, IGNORECASE)
         print(orbiting.group(0))
@@ -156,18 +242,63 @@ class commands:
         print(deorbited.group(0))
 
     @staticmethod
-    def yoda(*args):
-        """Say something, I will."""
-        commands.quote('yoda')
-        time.sleep(1)
-        commands.browser('https://www.google.com/search?q=yoda&tbm=isch')
+    def rockpaperscissors(*args):
+        """Play "rock, paper, scissors" against the most powerful AI on the planet."""
+        options = {
+            'paper': 'rock',
+            'scissors': 'paper',
+            'rock': 'scissors'
+        }
+        player = input("Enter rock, paper, or scissors: ").lower().strip()
+        if player in options.keys():
+            ai = random.choice(list(options.keys()))
+            print(f"AI: {ai}")
+            if options[player] == ai:
+                print("You won!")
+
+            elif options[ai] == player:
+                print("You lost.")
+
+            else:
+                print("Tie!")
+
+        else:
+            print(random.choice(["Nope.", "I'm disappointed.", "Try again."]))
 
     @staticmethod
-    def rainbow(*args):
-        """Cycle through terminal colors."""
-        for color in '0123456789abcdef0':
-            os.system(f'color {color}7')
-            time.sleep(0.1)
+    def birthday(*args):
+        """birthday [yyyy/mm/dd]\nShow birthday and age info."""
+        if not args:
+            print(commands.birthday.__doc__)
+            return
+
+        from datetime import date
+        try:
+            dob = date(*[int(i) for i in args[0].split("/")])
+
+        except:
+            print("Invalid date.")
+            return
+
+        now = date.today()
+        if dob > now:
+            print(random.choice(["That's not how it works.", "Are you from the future?", "Nice try."]))
+            return
+
+        print(f"Today is {now.strftime('%A %b %d, %Y')}")
+        numberOfDays = (now - dob).days
+        print(f"You are {numberOfDays // 365} years old.")
+        print(f"You were born on a {dob.strftime('%A')}.")
+        print(f"You have spent {numberOfDays} days on Earth.")
+        nextBirthday = date(now.year, dob.month, dob.day)
+        if nextBirthday < now:
+            nextBirthday = date(now.year + 1, dob.month, dob.day)
+
+        elif nextBirthday == now:
+            print("Today is your birthday! Happy birthday!")
+            return
+
+        print(f"Your birthday is in {(nextBirthday - now).days} days.")
 
     @staticmethod
     def paradox(*args):
@@ -191,8 +322,62 @@ class commands:
         print(random.choice(paradoxes))
 
     @staticmethod
+    def joke(*args):
+        """Funny jokes."""
+        jokes = [
+            "Why did the bike fall over?\nIt was two-tired.",
+            "What did the ocean say to the shore?\nNothing. It just waved.",
+            "Why did the gym close down?\nIt just didn't work out.",
+            "What do you call a pig that does Karate?\nA pork chop.",
+            "What's the best thing about Switzerland?\nI don't know, but the flag is a big plus.",
+            "What kind of tree can fit in your hand?\nA palm tree!",
+            "Today at the bank, a woman asked me to check her balance. So I pushed her over.",
+            "What did the traffic light say to the car?\n'Don't look! I'm about to change.'",
+            "What ryhmes with orange?\nNo, it doesn't.",
+            "What did the plate say to his friend?\nTonight, dinner's on me!",
+            "How do trees get online?\nThey just log on!",
+            "My daughter wanted a Cinderella-themed party, so I invited her friends and made them clean the house.",
+            "'Can I watch the TV?'\nDad: 'Yes, but don't turn it on.'",
+            "Are you free tonight?\nNo, I'm expensive.",
+            "Why did the kid throw his clock out of the window?\nBecause he wanted to see time fly.",
+            "What do you call a snake that is exactly 3.14 meters long?\nA πthon.",
+            "What did the Science book say to the Math book?\nWow, you've got problems.",
+            "What happened when the strawberry attempted to cross the road?\nThere was a traffic jam!",
+            "Your WinRAR 30-day trial is up. Please pay to continue using service.",
+            "Parallel lines have so much in common. It's a shame they'll never meet.",
+            "People say nothing is impossible, yet I do nothing every day."
+        ]
+        print(random.choice(jokes))
+
+    @staticmethod
+    def fact(*args):
+        """Random facts."""
+        facts = [
+            "The Mona Lisa has no eyebrows.",
+            "The sentence, \"The quick brown fox jumps over the lazy dog\" uses every letter in the English alphabet.",
+            "\"Sixth sick sheik's sixth sheep's sick\" is said to be the toughest tongue twister in the English language.",
+            "111,111,111 x 111,111,111 = 12,345,678,987,654,321",
+            "The world's longest French fry is 34 inches long.",
+            "The record for the longest long jump is held by Mike Powell: 29 ft. 4 inches. That's like jumping the length of two minivans!",
+            "A crocodile cannot stick its tongue out.",
+            "The word computer 'bug' was inspired by a real bug. It was founded by Grace Hopper in 1947.",
+            "The first programming language was called Fortran, and it was created in the 1950s.",
+            "The Sun is so large that approximately 1.3 million Earths could fit inside.",
+            "There is no atmosphere in space, which means that sound has no medium or way to travel to be heard.",
+            "A day on Venus lasts 243 days, and a year is 224 days.",
+            "Dwight D. Eisenhower was the first President of all 50 states.",
+            "Tennis for Two (Pong) is widely considered the oldest video game in the world.",
+            "The Golden Gate Bridge's clearance above high water averages 220 feet (67 meters).",
+            "Generally, a horse has 205 bones (54 vertebral column, 36 ribs, 1 sternum, 34 skull, 40 front legs, and 40 hindlegs).",
+            "'Set' has 464 definitions in the Oxford English Dictionary. 'Run' runs a distant second, with 396.",
+            "Fish need oxygen too, but since they don't have lungs, they take oxygen from the water in which they live.",
+            "The best code is code you didn't have to write."
+        ]
+        print(random.choice(facts))
+
+    @staticmethod
     def quote(*args):
-        """I don't like sand."""
+        """Wise quotes."""
         yoda = [
             '"There is another..." - Yoda',
             '"Do or do not. There is no try." - Yoda',
@@ -207,7 +392,6 @@ class commands:
             '"If no mistake you have made, losing you are. A different game you should play." - Yoda'
         ]
         starwars = [
-            *yoda,
             '"It\'s a trap!" - Admiral Ackbar',
             '"Never tell me the odds." - Han Solo',
             '"I find your lack of faith disturbing." - Darth Vader',
@@ -216,87 +400,55 @@ class commands:
             '"There\'s always a bigger fish." - Qui-Gon Jinn',
             '"Unlimited power!" - Darth Sidious',
             '"A long time ago in a galaxy far, far away..." - Star Wars',
-            '"I don\'t like sand." - Anakin Skywalker'
+            '"I don\'t like sand." - Anakin Skywalker',
+            *yoda
         ]
-        other = [
+        all = [
+            '"There are 10 types of people in the world: Those who understand binary and those who don\'t." - The Talos Principle',
+            '"You monster." - GLaDOS'
             *yoda,
-            *starwars,
-            '"There are only 10 types of people in the world: Those that understand binary and those that don\'t." -The Talos Principle'
+            *starwars
         ]
         groups = {
             'yoda': yoda,
-            'starwars': starwars,
-            'other' : other,
+            'starwars': starwars
         }
-        if args and args[0] in groups:
+        if args and args[0] in groups.keys():
             print(random.choice(groups[args[0]]))
 
         else:
-            print(random.choice(random.choice(list(groups.values()))))
-    
-    @staticmethod
-    def birthday(*args):
-        """birthday [yyyy/mm/dd]\nShow birthday and age info."""
-        if not args:
-            print(commands.birthday.__doc__)
-            return
+            print(random.choice(all))
 
-        from datetime import date
-        try:
-            dob = date(*[int(i) for i in args[0].split("/")])
-            
-        except:
-            print("Invalid date.")
-            return
+    @staticmethod             
+    def whosonfirst(*args):   
+        """Abott and Costello - Who's on First"""
+        print("Abott: There is a Baseball team at the retired actors home and I am the manager.")
+        print("Costello: Yes, I would like to join the retired baseball team.")
+        print("Abbott: Oh,you would would you?")
+        print("Costello: I would like to know some of the guys on the team.")
+        print("Abbott: You know they give baseball players nowadays very peculiar names.")
+        print("Abbott: Okay, well let's see that we have on our team... we have Who's on First, What's on Second, and I don't know is on third ")
+        print("Costello: That's what I want to find out the guys name...")
+        print("Abott: I am telling you, Who's on First, What's on Second, and I don't know is on third ")
+        print("Costello: Who's on first?")
+        print("Abbott: y Yes.")
+        print("Costello: I mean the guy's name.")
+        print("Abbott: Who.")
+        print("Costello: The man playing first base.")
+        print("Abbott: Who.")
+        print("Costello: I am asking you Who's on first base.")
+        print("...")
+        print("Costello: you got an outfield?")
+        print("Abbott: Naturally, Why?")
+        print("Costello: Because I want to know, because.")
+        print("Abbott: He is center field.")
+        print("...")
+        print("Costello: I don't give a darn!")
+        print("Abbott: OH he's our shortstop!")
+        time.sleep(3)
+        commands.browser("https://www.bing.com/videos/search?q=abbott+and+costello+who%27s+on+first+skit&docid=607996425216133098&mid=949203F4E9ECC1296AFF949203F4E9ECC1296AFF&view=detail&FORM=VIRE")
 
-        now = date.today()
-        if dob > now:
-            print(random.choice(["That's not how it works.", "Are you from the future?", "Nice try."]))
-            return
-
-        print(f"Today is {now.strftime('%A %b %d, %Y')}")
-        numberOfDays = (now - dob).days
-        print(f"You are {numberOfDays // 365} years old.")
-        print(f"You were born on a {dob.strftime('%A')}.")
-        print(f"You have spent {numberOfDays} days on Earth.")
-        nextBirthday = date(now.year, dob.month, dob.day)
-        if nextBirthday < now:
-            nextBirthday = date(now.year + 1, dob.month, dob.day)
-            
-        elif nextBirthday == now:
-            print("Today is your birthday! Happy birthday!")
-            return
-            
-        print(f"Your birthday is in {(nextBirthday - now).days} days.")
-
-    @staticmethod
-    def joke(*args):
-        """Funny jokes."""
-        import random
-        jokes = [
-            "Why did the bike fall over? \nIt was two-tired.",
-            "What did the ocean say to the shore? \nNothing. It just waved.",
-            "Why did the gym close down? \nIt just didn't work out.",
-            "What do you call a pig that does Karate? \nA pork chop.",
-            "What's the best thing about Switzerland? \nI don't know, but the flag is a big plus.",
-            "What kind of tree can fit in your hand? \nA palm tree!",
-            "Today at the bank, a woman asked me to check her balance. So I pushed her over.",
-            "What did the traffic light say to the car? \n'Don't look! I'm about to change.'",
-            "What ryhmes with orange? \nNo, it doesn't.",
-            "What did the plate say to his friend? \nTonight, dinner's on me!",
-            "How do trees get online? \nThey just log on!",
-            "My daughter wanted a Cinderella-themed party, so I invited her friends and made them clean the house.",
-            "'Can I watch the TV?' \nDad: Yes, but don't turn it on.",
-            "Are you free tonight? \nNo, I'm expensive.",
-            "Why did the kid throw his clock out of the window? \nBecause he wanted to see time fly.",
-            "What do you call a snake that is exactly 3.14 meters long? \nA πthon.",
-            "What did the Science book say to the Math book? \nWow, you've got problems.",
-            "What happened when the strawberry attempted to cross the road? \nThere was a traffic jam!",
-            "Your WinRAR 30-day trial is up. Please pay to continue using service.",
-            "Parallel lines have so much in common. It's a shame they'll never meet."
-        ]
-        print(random.choice(jokes))
-
+commands.boot()
 # INPUT LOOP
 while True:
     try:
@@ -307,4 +459,4 @@ while True:
 
     except Exception as exception:
         if debug:
-            print(str(exception))
+            print(f"Exception: {exception}")
