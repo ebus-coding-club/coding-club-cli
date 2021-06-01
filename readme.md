@@ -1,17 +1,11 @@
 # Coding Club CLI
-A collaborative command line project for the whole club.
-
-The purpose of the program is to have fun making it.
-Your job is to add commands to the program.
-The commands can do anything, like say something funny or open a webpage.
-To add a command, simply add a function to the `commands` class that will be called by name.
-
-Here is an example:
-```python
-@staticmethod             # Make sure to put this line before your function
-def commandname(*args):   # Make sure to put '*args' as the last parameter
-    """Description goes here. The description will be used in the `help` function."""
-    print("Hello World!") # Do something here
-```
+A collaborative command line project created by the club.
+## Usage
+### Windows Users
+Download the project `zip` archive, unzip the contents, navigate to the `dist` folder. Double click `cli.exe` to start the program.
+### MacOS and Linux Users
+Download and install [Python 3.9](https://www.python.org/ftp/python/3.9.5/python-3.9.5-amd64.exe). Next, download the project `zip` archive and unzip the contents. Double click `cli.py` to start the program.
+## Disclaimer
+The EBUS Coding Club is not reponsible for any damage cause directly or indirectly by this software. Use at your own risk.
 ## License
 [MIT License](https://choosealicense.com/licenses/mit/)

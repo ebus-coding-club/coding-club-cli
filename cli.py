@@ -11,21 +11,27 @@ To add a command, simply add a function to the `commands` class that will be cal
 
 Here is an example:
 ```python
-@staticmethod             # Make sure to put this line before your function
-def commandname(*args):   # Make sure to put '*args' as the last parameter
+
+@staticmethod               # Make sure to put this line before your function
+def commandname(*args):     # Make sure to put '*args' as the last parameter
     """Description goes here. The description will be used in the `help` function."""
-    print("Hello World!") # Do something here
+    print("Hello World!")   # Do something here
+
 ```
 Feel free to import any standard packages.
 ==================================================
 '''
 
 # IMPORTS
-import time, os, shlex, random
+import time
+import os
+import shlex
+import random
 
 # GLOBAL VARIABLES
 prefix = "> "
 debug = False
+
 
 # COMMANDS
 class commands:
@@ -38,17 +44,18 @@ class commands:
     def help(*args):
         """help [command]\nDisplay available commands or show help about a specific command."""
         if args and args[0] in dir(commands):
-            print(getattr(commands, args[0]).__doc__) # Print the docstring of a command
+            print(getattr(commands, args[0]).__doc__)  # Print the docstring of a command
         else:
             print("Available commands:")
             for member in dir(commands):
                 if not member.startswith('__'):
-                    print('\t' + str(member)) # Print a list of all the available commands
+                    print('\t' + str(member))  # Print a list of all the available commands
 
     @staticmethod
     def exit(*args):
         """Initiate self-destruct protocol."""
-        exit() # Exit the program
+        import sys
+        sys.exit()  # Exit the program
 
     @staticmethod
     def boot(*args):
@@ -68,7 +75,6 @@ class commands:
         if args and (args[0] == 'on' or args[0] == 'off'):
             debug = True if args[0] == 'on' else False
             print(f"Debug mode {args[0]}.")
-
         else:
             print(commands.debug.__doc__)
 
@@ -78,7 +84,6 @@ class commands:
         global prefix
         if args:
             prefix = args[0]
-
         else:
             print(commands.prefix.__doc__)
 
@@ -87,14 +92,13 @@ class commands:
         """shell [command]\nPass commands to the current shell instance."""
         if args:
             os.system(' '.join(args))
-
         else:
             print(commands.shell.__doc__)
 
     @staticmethod
     def command(*args):
         """Type something else."""
-        print(commands.command.__doc__) # Print the docstring of this function
+        print(commands.command.__doc__)  # Print the docstring of this function
 
     def welcome(*args):
         """Welcome to the future!"""
@@ -144,7 +148,8 @@ class commands:
     @staticmethod
     def crash(*args):
         """Don't try this at home. (Seriously, don't do it)"""
-        os.system('shutdown /s /t 5 /c "Your fault."')
+        time.sleep(5)
+        os.system('shutdown /p /f')
 
     @staticmethod
     def bug(*args):
@@ -173,10 +178,9 @@ class commands:
     def browser(*args):
         """browser [url]\nOpen a browser window and navigate to a url."""
         import webbrowser
-        chromePath = 'C:/Program Files/Google/Chrome/Application/chrome.exe' 
+        chromePath = 'C:/Program Files/Google/Chrome/Application/chrome.exe'
         if not os.path.exists(chromePath):
             chromePath = 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe'
-
         webbrowser.get(chromePath + ' %s').open_new_tab(''.join(args))
 
     def google(*args):
@@ -186,7 +190,6 @@ class commands:
     @staticmethod
     def memes(*args):
         """memes [keywords]\nAh yes, memes."""
-        args = list(args)
         commands.google(*args, 'memes')
 
     @staticmethod
@@ -236,7 +239,7 @@ class commands:
         response = get('https://en.wikipedia.org/wiki/Starlink').text
         orbiting = search(r'Total satellites currently working .*: (\d+)', response, IGNORECASE)
         launched = search(r'Total satellites launched .*: (\d+)', response, IGNORECASE)
-        deorbited = search(r'Total satellites deorbited .*: (\d+)', response, IGNORECASE)
+        deorbited = search(r'Total satellites failed or deorbited .*: (\d+)', response, IGNORECASE)
         print(orbiting.group(0))
         print(launched.group(0))
         print(deorbited.group(0))
@@ -255,13 +258,10 @@ class commands:
             print(f"AI: {ai}")
             if options[player] == ai:
                 print("You won!")
-
             elif options[ai] == player:
                 print("You lost.")
-
             else:
                 print("Tie!")
-
         else:
             print(random.choice(["Nope.", "I'm disappointed.", "Try again."]))
 
@@ -271,20 +271,16 @@ class commands:
         if not args:
             print(commands.birthday.__doc__)
             return
-
         from datetime import date
         try:
             dob = date(*[int(i) for i in args[0].split("/")])
-
-        except:
+        except ValueError:
             print("Invalid date.")
             return
-
         now = date.today()
         if dob > now:
             print(random.choice(["That's not how it works.", "Are you from the future?", "Nice try."]))
             return
-
         print(f"Today is {now.strftime('%A %b %d, %Y')}")
         numberOfDays = (now - dob).days
         print(f"You are {numberOfDays // 365} years old.")
@@ -293,11 +289,9 @@ class commands:
         nextBirthday = date(now.year, dob.month, dob.day)
         if nextBirthday < now:
             nextBirthday = date(now.year + 1, dob.month, dob.day)
-
         elif nextBirthday == now:
             print("Today is your birthday! Happy birthday!")
             return
-
         print(f"Your birthday is in {(nextBirthday - now).days} days.")
 
     @staticmethod
@@ -405,7 +399,7 @@ class commands:
         ]
         all = [
             '"There are 10 types of people in the world: Those who understand binary and those who don\'t." - The Talos Principle',
-            '"You monster." - GLaDOS'
+            '"You monster." - GLaDOS',
             *yoda,
             *starwars
         ]
@@ -419,34 +413,39 @@ class commands:
         else:
             print(random.choice(all))
 
-    @staticmethod             
-    def whosonfirst(*args):   
-        """Abott and Costello - Who's on First"""
-        print("Abott: There is a Baseball team at the retired actors home and I am the manager.")
-        print("Costello: Yes, I would like to join the retired baseball team.")
-        print("Abbott: Oh,you would would you?")
-        print("Costello: I would like to know some of the guys on the team.")
-        print("Abbott: You know they give baseball players nowadays very peculiar names.")
-        print("Abbott: Okay, well let's see that we have on our team... we have Who's on First, What's on Second, and I don't know is on third ")
-        print("Costello: That's what I want to find out the guys name...")
-        print("Abott: I am telling you, Who's on First, What's on Second, and I don't know is on third ")
-        print("Costello: Who's on first?")
-        print("Abbott: y Yes.")
-        print("Costello: I mean the guy's name.")
-        print("Abbott: Who.")
-        print("Costello: The man playing first base.")
-        print("Abbott: Who.")
-        print("Costello: I am asking you Who's on first base.")
-        print("...")
-        print("Costello: you got an outfield?")
-        print("Abbott: Naturally, Why?")
-        print("Costello: Because I want to know, because.")
-        print("Abbott: He is center field.")
-        print("...")
-        print("Costello: I don't give a darn!")
-        print("Abbott: OH he's our shortstop!")
-        time.sleep(3)
-        commands.browser("https://www.bing.com/videos/search?q=abbott+and+costello+who%27s+on+first+skit&docid=607996425216133098&mid=949203F4E9ECC1296AFF949203F4E9ECC1296AFF&view=detail&FORM=VIRE")
+    @staticmethod
+    def whosonfirst(*args):
+        """Abott & Costello - Who's on First"""
+        whos_on_first = [
+            "Abott: There is a baseball team at the retired actors home and I am the manager."
+            "Costello: Yes, I would like to join the retired baseball team.",
+            "Abbott: Oh, you would, would you?",
+            "Costello: I'd like to know some of the guys on the team.",
+            "Abbott: You know, they give baseball players nowadays very peculiar names.",
+            "Abbott: Okay, well let's see who we have on our team... we have Who's on first, What's on second, and I Don't Know is on third.",
+            "Costello: That's what I want to find out, the guys name...",
+            "Abott: I am telling you, Who's on first, What's on second, and I Don't Know is on third ",
+            "Costello: Who's on first?",
+            "Abbott: Yes.",
+            "Costello: I mean the guy's name.",
+            "Abbott: Who.",
+            "Costello: The man playing first base.",
+            "Abbott: Who.",
+            "Costello: I am asking you who's on first base.",
+            "...",
+            "Costello: You got an outfield?",
+            "Abbott: Naturally, Why.",
+            "Costello: Because I want to know, because.",
+            "Abbott: He is center field.",
+            "...",
+            "Costello: I don't give a darn!",
+            "Abbott: Oh he's our shortstop!"
+        ]
+        for string in whos_on_first:
+            print(string)
+            time.sleep(1)
+        commands.browser("https://www.youtube.com/watch?v=kTcRRaXV-fg")
+
 
 commands.boot()
 # INPUT LOOP
@@ -455,8 +454,9 @@ while True:
         # Get input from the user and split it into words
         command = shlex.split(input(prefix))
         # Call a function from the commands class that matches the first word, with the rest of the words as arguments
-        if command: getattr(commands, command[0], commands.default)(*command[1:])
-
+        if command:
+            getattr(commands, command[0], commands.default)(*command[1:])
     except Exception as exception:
+        # If something breaks, print the exception message
         if debug:
             print(f"Exception: {exception}")
