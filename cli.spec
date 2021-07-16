@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['cli.py'],
-             pathex=['C:\\Users\\Timothy Pavlushik\\Documents\\Visual Studio Code\\Projects\\coding-club-cli'],
+             pathex=[],
              binaries=[],
              datas=[],
              hiddenimports=[],

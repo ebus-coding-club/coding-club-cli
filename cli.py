@@ -1,7 +1,4 @@
 '''
-==================================================
-READ THIS FIRST
-
 Welcome!
 This program is a command line interface.
 The purpose of the program is to have fun making it.
@@ -19,7 +16,6 @@ def commandname(*args):     # Make sure to put '*args' as the last parameter
 
 ```
 Feel free to import any standard packages.
-==================================================
 '''
 
 # IMPORTS
@@ -56,6 +52,46 @@ class commands:
         """Initiate self-destruct protocol."""
         import sys
         sys.exit()  # Exit the program
+
+    @staticmethod
+    def license(*args):
+        print("""MIT License
+
+Copyright (c) 2021 EBUS Coding Club
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.""")
+
+    @staticmethod
+    def about(*args):
+        """About this program."""
+        print("This is a command line program created by the students in the EBUS Coding Club. Have fun with the various commands available!")
+
+    @staticmethod
+    def credits(*args):
+        members = [
+            "LemonPi314 - Owner",
+            "Duplexes - Contributor",
+            "itsMimi - Contributor",
+            "mdevauld - Contributor"
+        ]
+        for member in members:
+            print(member)
 
     @staticmethod
     def boot(*args):
@@ -139,11 +175,6 @@ class commands:
     def canipass(*args):
         """You shall not pass."""
         print(commands.canipass.__doc__)
-
-    @staticmethod
-    def dont(*args):
-        """I said don't."""
-        print(commands.dont.__doc__)
 
     @staticmethod
     def crash(*args):
