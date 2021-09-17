@@ -10,12 +10,12 @@ Here is an example:
 ```python
 
 @staticmethod               # Make sure to put this line before your function
-def commandname(*args):     # Make sure to put '*args' as the last parameter
+def commandname(*args):     # Make sure to put `*args` as the last parameter
     """Description goes here. The description will be used in the `help` function."""
     print("Hello World!")   # Do something here
 
 ```
-Feel free to import any standard packages.
+Feel free to import any standard libraries.
 '''
 
 # IMPORTS
@@ -25,7 +25,7 @@ import shlex
 import random
 
 # GLOBAL VARIABLES
-prefix = "> "
+prefix = '> '
 debug = False
 
 
@@ -33,8 +33,8 @@ debug = False
 class commands:
     @staticmethod
     def default(*args):
-        """This is what happens when an unrecognized command is entered."""
-        print("Unrecognized command.")
+        """This is what happens when an unknown command is entered."""
+        print("Unknown command. Type 'help' for a list of available commands.")
 
     @staticmethod
     def help(*args):
@@ -42,19 +42,20 @@ class commands:
         if args and args[0] in dir(commands):
             print(getattr(commands, args[0]).__doc__)  # Print the docstring of a command
         else:
+            print("Type 'help <command>' for information about a specific command.")
             print("Available commands:")
             for member in dir(commands):
-                if not member.startswith('__'):
+                if not member.startswith('_'):
                     print('\t' + str(member))  # Print a list of all the available commands
 
     @staticmethod
     def exit(*args):
         """Initiate self-destruct protocol."""
-        import sys
-        sys.exit()  # Exit the program
+        raise SystemExit  # Exit the program
 
     @staticmethod
     def license(*args):
+        """Legal stuff."""
         print("""MIT License
 
 Copyright (c) 2021 EBUS Coding Club
@@ -84,6 +85,7 @@ SOFTWARE.""")
 
     @staticmethod
     def credits(*args):
+        """Who made this?"""
         members = [
             "LemonPi314 - Owner",
             "Duplexes - Contributor",
@@ -106,7 +108,7 @@ SOFTWARE.""")
 
     @staticmethod
     def debug(*args):
-        """debug [on/off]\nTurn debug mode on or off."""
+        """Turn debug mode on or off.\n\nUsage:\n\tdebug (on | off)"""
         global debug
         if args and (args[0] == 'on' or args[0] == 'off'):
             debug = True if args[0] == 'on' else False
@@ -116,7 +118,7 @@ SOFTWARE.""")
 
     @staticmethod
     def prefix(*args):
-        """prefix "string"\nChange the input prefix."""
+        """Change the input prefix.\n\nUsage:\n\tprefix <string>\n\nArguments:\n\t<string>  string to use as a prefix"""
         global prefix
         if args:
             prefix = args[0]
@@ -125,7 +127,7 @@ SOFTWARE.""")
 
     @staticmethod
     def shell(*args):
-        """shell [command]\nPass commands to the current shell instance."""
+        """Pass commands to the underlying shell instance.\n\nUsage:\n\tshell <command>\n\nArguments:\n\t<command>  command to execute in the shell"""
         if args:
             os.system(' '.join(args))
         else:
@@ -136,6 +138,7 @@ SOFTWARE.""")
         """Type something else."""
         print(commands.command.__doc__)  # Print the docstring of this function
 
+    @staticmethod
     def welcome(*args):
         """Welcome to the future!"""
         print(commands.welcome.__doc__)
@@ -179,12 +182,19 @@ SOFTWARE.""")
     @staticmethod
     def crash(*args):
         """Don't try this at home. (Seriously, don't do it)"""
+        if input("Are you sure? Type 'yes' if you are sure: ") != "yes":
+            return
+        if input("Are you absolutely 100% sure you want to continue? Last chance. Type 'YES I AM SURE' if you really want to continue: ") != "YES I AM SURE":
+            return
+        print("You have been warned.")
         time.sleep(5)
-        os.system('shutdown /p /f')
+        os.system('shutdown -p -f')
 
     @staticmethod
     def bug(*args):
-        print("RuntimeError: Uh oh something's broken...")
+        """RuntimeError: Uh oh something's broken..."""
+        commands.bug.__doc__ = random.choice(["RuntimeError: Uh oh something's broken...", "Bug? Where?", "It's not a bug, it's a feature.", "Error 404: Funny joke not found."])
+        print(commands.bug.__doc__)
 
     @staticmethod
     def meaningoflife(*args):
@@ -207,26 +217,22 @@ SOFTWARE.""")
 
     @staticmethod
     def browser(*args):
-        """browser [url]\nOpen a browser window and navigate to a url."""
+        """Open a browser window and navigate to a url.\n\nUsage:\n\tbrowser <url>\n\nArguments:\n\t<url>  url to navigate to"""
         import webbrowser
         chromePath = 'C:/Program Files/Google/Chrome/Application/chrome.exe'
         if not os.path.exists(chromePath):
             chromePath = 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe'
         webbrowser.get(chromePath + ' %s').open_new_tab(''.join(args))
 
+    @staticmethod
     def google(*args):
-        """google [keywords]\nSearch Google."""
+        """Search Google.\n\nUsage:\n\tgoogle [keyword...]\n\nArguments:\n\t[keyword...]  keywords to search for"""
         commands.browser(f"https://www.google.com/search?q={'+'.join(args)}")
 
     @staticmethod
     def memes(*args):
-        """memes [keywords]\nAh yes, memes."""
+        """Ah yes, memes.\n\nUsage:\n\tmemes [keyword...]\n\nArguments:\n\t[keyword...]  keywords to add to the search query"""
         commands.google(*args, 'memes')
-
-    @staticmethod
-    def asciiart(*args):
-        """asciiart [text]\nShow ASCII art generated from input text."""
-        commands.browser(f"http://patorjk.com/software/taag/#p=display&f=Graffiti&t={'%20'.join(args)}")
 
     @staticmethod
     def yoda(*args):
@@ -294,11 +300,11 @@ SOFTWARE.""")
             else:
                 print("Tie!")
         else:
-            print(random.choice(["Nope.", "I'm disappointed.", "Try again."]))
+            print(random.choice(["Nope.", "I'm disappointed.", "Try again.", "Better luck next time."]))
 
     @staticmethod
     def birthday(*args):
-        """birthday [yyyy/mm/dd]\nShow birthday and age info."""
+        """Show birthday and age info.\n\nUsage:\n\tbirthday <date>\n\nArguments:\n\t<date>  your date of birth in yyyy/mm/dd format"""
         if not args:
             print(commands.birthday.__doc__)
             return
@@ -440,7 +446,6 @@ SOFTWARE.""")
         }
         if args and args[0] in groups.keys():
             print(random.choice(groups[args[0]]))
-
         else:
             print(random.choice(all))
 
@@ -472,8 +477,8 @@ SOFTWARE.""")
             "Costello: I don't give a darn!",
             "Abbott: Oh he's our shortstop!"
         ]
-        for string in whos_on_first:
-            print(string)
+        for line in whos_on_first:
+            print(line)
             time.sleep(1)
         commands.browser("https://www.youtube.com/watch?v=kTcRRaXV-fg")
 
@@ -485,8 +490,13 @@ while True:
         # Get input from the user and split it into words
         command = shlex.split(input(prefix))
         # Call a function from the commands class that matches the first word, with the rest of the words as arguments
+        # If a matching function doesn't exist, call the default function
         if command:
             getattr(commands, command[0], commands.default)(*command[1:])
+    except KeyboardInterrupt:
+        # If the user pressed Ctrl+C, exit gracefully
+        print("\nShutting down...")
+        break
     except Exception as exception:
         # If something breaks, print the exception message
         if debug:

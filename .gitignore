@@ -1,4 +1,7 @@
 .vscode/
+.idea/
+.vs/
 __pycache__/
 [Bb]uild/
+dist/
 *env*
